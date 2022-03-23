@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Happie Dad Jokes & Puns!",
+    "slug": "happie-dad-jokes-puns",
+    "description": "Stuck for a dad joke? You have come to the right place!",
+    "privacy": "public",
+    "sdkVersion": "38.0.0",
+    "platforms": [
+      "android"
+    ],
+    "version": "1.0.3",
+    "orientation": "portrait",
+    "primaryColor": "#0096ff",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0096ff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android" : {
+      "package":"com.happie.dadjokes",
+      "versionCode": 13, 
+      "permissions" : []
+    }
+  }
+}

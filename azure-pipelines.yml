@@ -1,0 +1,57 @@
+# Expo Build
+
+pool:
+  vmImage: 'macOS-latest'
+
+steps:
+- task: NodeTool@0
+  inputs: 
+   versionSpec: '12.x'
+   
+  displayName: 'Install Node.js'
+
+- script: |
+   npm install
+   
+   npm install -g expo-cli
+   npm install -g turtle-cli
+
+   npx expo login -u $(EXPO_CLI_USER) -p $(EXPO_CLI_PASSWORD) 
+   
+   npx expo publish --non-interactive --release-channel deployment
+   
+   turtle setup:android
+   EXPO_ANDROID_KEYSTORE_PASSWORD=$(EXPO_ANDROID_KEYSTORE_PASSWORD) EXPO_ANDROID_KEY_PASSWORD=$(EXPO_ANDROID_KEY_PASSWORD) turtle build:android -u $(EXPO_CLI_USER) -p $(EXPO_CLI_PASSWORD) --keystore-path android/happie-dad-jokes-puns.jks --keystore-alias $(keystore-alias) -t apk --release-channel deployment
+
+  displayName: 'npm install and Expo & turtle build'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)/metadata'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/metadata.zip'
+    replaceExistingArchive: true
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '/Users/runner/expo-apps'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/HappieDadExpoApp.zip'
+    replaceExistingArchive: true
+    
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/metadata.zip'
+    ArtifactName: 'metadata'
+    publishLocation: 'Container'
+  displayName: 'Publish MetaData'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/HappieDadExpoApp.zip'
+    ArtifactName: 'android'
+    publishLocation: 'Container'
+    
+  displayName: 'Publish Android'
